@@ -1,0 +1,30 @@
+<scxml initial="Stopped" version="0.9" xmlns="http://www.w3.org/2005/07/scxml"><!--   node-size-and-position x=30 y=40 w=450 h=380  -->
+ <state id="Moving" initial="DisconnectedMoving"><!--   node-size-and-position x=20 y=40 w=164 h=280  -->
+  <transition event="ShipStopped" target="Stopped"><!--   edge-path [Stopped]  x=230 y=160  --></transition>
+  <state id="ConnectedMoving"><!--   node-size-and-position x=30 y=168 w=100 h=75  -->
+   <onentry>SendConnectedMovingNote</onentry>
+   <transition event="wifi.disconnected" target="DisconnectedMoving"><!--   edge-path [DisconnectedMoving]  x=64 y=143 pointx=0 pointy=10 offsetx=-4 offsety=-15  --></transition>
+   <transition event="ship.stopped" target="ConnectedStopped"><!--   edge-path [ConnectedStopped]  x=230 y=270 pointx=0 pointy=-18 offsetx=13 offsety=2  --></transition>
+  </state>
+  <state id="DisconnectedMoving"><!--   node-size-and-position x=20 y=43 w=120 h=75  -->
+   <onentry>SendDisconnectedMovingNote</onentry>
+   <transition event="wifi.connected" target="ConnectedMoving"><!--   edge-path [ConnectedMoving]  x=85 y=151 pointx=0 pointy=25 offsetx=1 offsety=9  --></transition>
+   <transition event="ship.stopped" target="DisconnectedStopped"><!--   edge-path [DisconnectedStopped]  x=230 y=130  --></transition>
+  </state>
+ </state>
+ <state id="Stopped" initial="DisconnectedStopped"><!--   node-size-and-position x=280 y=40 w=160 h=280  -->
+  <transition event="ShipStarted" target="Moving"><!--   edge-path [Moving]  x=220 y=210  --></transition>
+  <state id="DisconnectedStopped"><!--   node-size-and-position x=20 y=43 w=120 h=75  -->
+   <onentry>SendAlert</onentry>
+   <onexit>ClearAlert</onexit>
+   <transition event="wifi.connected" target="ConnectedStopped"><!--   edge-path [ConnectedStopped]  x=84 y=143 pointx=0 pointy=25 offsetx=1 offsety=9  --></transition>
+   <transition event="ship.moving" target="DisconnectedMoving"><!--   edge-path [DisconnectedMoving]  x=230 y=100  --></transition>
+  </state>
+  <state id="ConnectedStopped"><!--   node-size-and-position x=30 y=168 w=100 h=75  -->
+   <onentry>MoveToWiFi</onentry>
+   <onexit>MoveToVSat</onexit>
+   <transition event="wifi.disconnected" target="DisconnectedStopped"><!--   edge-path [DisconnectedStopped]  x=64 y=143 pointx=0 pointy=13 offsetx=-1 offsety=-6  --></transition>
+   <transition event="ship.moving" target="ConnectedMoving"><!--   edge-path [ConnectedMoving]  x=230 y=240  --></transition>
+  </state>
+ </state>
+</scxml>

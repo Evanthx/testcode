@@ -1,0 +1,29 @@
+<scxml initial="Stopped" version="0.9" xmlns="http://www.w3.org/2005/07/scxml">
+<state id="Moving" initial="DisconnectedMoving">
+    <transition event="ShipStopped" target="Stopped"></transition>
+    <state id="ConnectedMoving">
+        <onentry>SendConnectedMovingNote</onentry>
+        <transition event="wifi.disconnected" target="DisconnectedMoving"></transition>
+        <transition event="ship.stopped" target="ConnectedStopped"></transition>
+    </state>
+    <state id="DisconnectedMoving">
+        <onentry>SendDisconnectedMovingNote</onentry>
+        <transition event="wifi.connected" target="ConnectedMoving"></transition>
+        <transition event="ship.stopped" target="DisconnectedStopped"></transition>
+    </state>
+</state>
+<state id="Stopped" initial="DisconnectedStopped">
+    <transition event="ShipStarted" target="Moving"></transition>
+    <state id="DisconnectedStopped">
+        <transition event="wifi.connected" target="ConnectedStopped"></transition>
+        <transition event="ship.moving" target="DisconnectedMoving"></transition>
+    </state>
+    <state id="ConnectedStopped">
+        <onentry>
+            <send event="'wifi.disconnected'" />
+        </onentry>
+        <transition event="wifi.disconnected" target="DisconnectedStopped"></transition>
+        <transition event="ship.moving" target="ConnectedMoving"></transition>
+    </state>
+</state>
+</scxml>
